@@ -35,17 +35,14 @@ public class Window {
 
     private boolean resized;
 
-    private boolean vSync;
-
     private final WindowOptions opts;
 
     private final Matrix4f projectionMatrix;
 
-    public Window(String title, int width, int height, boolean vSync, WindowOptions opts) {
+    public Window(String title, int width, int height, WindowOptions opts) {
         this.title = title;
         this.width = width;
         this.height = height;
-        this.vSync = vSync;
         this.resized = false;
         this.opts = opts;
         projectionMatrix = new Matrix4f();
@@ -118,7 +115,7 @@ public class Window {
         // Make the OpenGL context current
         glfwMakeContextCurrent(windowHandle);
 
-        if (isvSync()) {
+        if (opts.vSync) {
             // Enable v-sync
             glfwSwapInterval(1);
         }
@@ -199,7 +196,7 @@ public class Window {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
 
-    public boolean windowShouldClose() {
+    public boolean shouldClose() {
         return glfwWindowShouldClose(windowHandle);
     }
 
@@ -223,14 +220,6 @@ public class Window {
         this.resized = resized;
     }
 
-    public boolean isvSync() {
-        return vSync;
-    }
-
-    public void setvSync(boolean vSync) {
-        this.vSync = vSync;
-    }
-
     public void update() {
         glfwSwapBuffers(windowHandle);
         glfwPollEvents();
@@ -251,6 +240,8 @@ public class Window {
         public boolean compatibleProfile;
 
         public boolean antialiasing;
+
+        public boolean vSync;
 
         public boolean frustumCulling;        
     }

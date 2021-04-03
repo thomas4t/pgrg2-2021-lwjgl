@@ -15,13 +15,13 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class AnimMeshesLoader extends StaticMeshesLoader {
 
-    public static AnimGameItem loadAnimGameItem(String resourcePath, String texturesDir) throws Exception {
-        return loadAnimGameItem(resourcePath, texturesDir,
+    public static AnimAppItem loadAnimItem(String resourcePath, String texturesDir) throws Exception {
+        return loadAnimItem(resourcePath, texturesDir,
                 aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate
                         | aiProcess_FixInfacingNormals | aiProcess_LimitBoneWeights);
     }
 
-    public static AnimGameItem loadAnimGameItem(String resourcePath, String texturesDir, int flags)
+    public static AnimAppItem loadAnimItem(String resourcePath, String texturesDir, int flags)
             throws Exception {
         AIScene aiScene = aiImportFile(resourcePath, flags);
         if (aiScene == null) {
@@ -50,7 +50,7 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
         Matrix4f globalInverseTransformation = toMatrix(aiScene.mRootNode().mTransformation()).invert();
         Map<String, Animation> animations = processAnimations(aiScene, boneList, rootNode,
                 globalInverseTransformation);
-        AnimGameItem item = new AnimGameItem(meshes, animations);
+        AnimAppItem item = new AnimAppItem(meshes, animations);
 
         return item;
     }
@@ -104,8 +104,8 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
         }
         Matrix4f nodeGlobalTransform = new Matrix4f(parentTransformation).mul(nodeTransform);
 
-        List<Bone> affectedBones = boneList.stream().filter( b -> b.getBoneName().equals(nodeName)).collect(Collectors.toList());
-        for (Bone bone: affectedBones) {
+        List<Bone> affectedBones = boneList.stream().filter(b -> b.getBoneName().equals(nodeName)).collect(Collectors.toList());
+        for (Bone bone : affectedBones) {
             Matrix4f boneTransform = new Matrix4f(globalInverseTransform).mul(nodeGlobalTransform).
                     mul(bone.getOffsetMatrix());
             animatedFrame.setMatrix(bone.getBoneId(), boneTransform);
@@ -153,9 +153,9 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
         AINodeAnim result = null;
         int numAnimNodes = aiAnimation.mNumChannels();
         PointerBuffer aiChannels = aiAnimation.mChannels();
-        for (int i=0; i<numAnimNodes; i++) {
+        for (int i = 0; i < numAnimNodes; i++) {
             AINodeAnim aiNodeAnim = AINodeAnim.create(aiChannels.get(i));
-            if ( nodeName.equals(aiNodeAnim.mNodeName().dataString())) {
+            if (nodeName.equals(aiNodeAnim.mNodeName().dataString())) {
                 result = aiNodeAnim;
                 break;
             }
@@ -167,7 +167,7 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
         int maxFrames = 0;
         int numNodeAnims = aiAnimation.mNumChannels();
         PointerBuffer aiChannels = aiAnimation.mChannels();
-        for (int i=0; i<numNodeAnims; i++) {
+        for (int i = 0; i < numNodeAnims; i++) {
             AINodeAnim aiNodeAnim = AINodeAnim.create(aiChannels.get(i));
             int numFrames = Math.max(Math.max(aiNodeAnim.mNumPositionKeys(), aiNodeAnim.mNumScalingKeys()),
                     aiNodeAnim.mNumRotationKeys());
@@ -234,9 +234,9 @@ public class AnimMeshesLoader extends StaticMeshesLoader {
         processBones(aiMesh, boneList, boneIds, weights);
 
         // Texture coordinates may not have been populated. We need at least the empty slots
-        if ( textures.size() == 0) {
+        if (textures.size() == 0) {
             int numElements = (vertices.size() / 3) * 2;
-            for (int i=0; i<numElements; i++) {
+            for (int i = 0; i < numElements; i++) {
                 textures.add(0.0f);
             }
         }

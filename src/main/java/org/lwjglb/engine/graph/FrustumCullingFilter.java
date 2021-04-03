@@ -5,7 +5,7 @@ import java.util.Map;
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjglb.engine.items.GameItem;
+import org.lwjglb.engine.items.AppItem;
 
 public class FrustumCullingFilter {
 
@@ -26,21 +26,21 @@ public class FrustumCullingFilter {
         frustumInt.set(prjViewMatrix);
     }
 
-    public void filter(Map<? extends Mesh, List<GameItem>> mapMesh) {
-        for (Map.Entry<? extends Mesh, List<GameItem>> entry : mapMesh.entrySet()) {
-            List<GameItem> gameItems = entry.getValue();
-            filter(gameItems, entry.getKey().getBoundingRadius());
+    public void filter(Map<? extends Mesh, List<AppItem>> mapMesh) {
+        for (Map.Entry<? extends Mesh, List<AppItem>> entry : mapMesh.entrySet()) {
+            List<AppItem> appItems = entry.getValue();
+            filter(appItems, entry.getKey().getBoundingRadius());
         }
     }
 
-    public void filter(List<GameItem> gameItems, float meshBoundingRadius) {
+    public void filter(List<AppItem> appItems, float meshBoundingRadius) {
         float boundingRadius;
         Vector3f pos;
-        for (GameItem gameItem : gameItems) {
-            if (!gameItem.isDisableFrustumCulling()) {
-                boundingRadius = gameItem.getScale() * meshBoundingRadius;
-                pos = gameItem.getPosition();
-                gameItem.setInsideFrustum(insideFrustum(pos.x, pos.y, pos.z, boundingRadius));
+        for (AppItem appItem : appItems) {
+            if (!appItem.isDisableFrustumCulling()) {
+                boundingRadius = appItem.getScale() * meshBoundingRadius;
+                pos = appItem.getPosition();
+                appItem.setInsideFrustum(insideFrustum(pos.x, pos.y, pos.z, boundingRadius));
             }
         }
     }

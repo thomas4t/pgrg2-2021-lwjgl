@@ -1,7 +1,7 @@
 package org.lwjglb.engine;
 
 import org.lwjglb.engine.items.SkyBox;
-import org.lwjglb.engine.items.GameItem;
+import org.lwjglb.engine.items.AppItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +13,9 @@ import org.lwjglb.engine.graph.weather.Fog;
 
 public class Scene {
 
-    private final Map<Mesh, List<GameItem>> meshMap;
+    private final Map<Mesh, List<AppItem>> meshMap;
 
-    private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
+    private final Map<InstancedMesh, List<AppItem>> instancedMeshMap;
 
     private SkyBox skyBox;
 
@@ -34,11 +34,11 @@ public class Scene {
         renderShadows = true;
     }
 
-    public Map<Mesh, List<GameItem>> getGameMeshes() {
+    public Map<Mesh, List<AppItem>> getAppMeshes() {
         return meshMap;
     }
 
-    public Map<InstancedMesh, List<GameItem>> getGameInstancedMeshes() {
+    public Map<InstancedMesh, List<AppItem>> getAppInstancedMeshes() {
         return instancedMeshMap;
     }
 
@@ -46,15 +46,15 @@ public class Scene {
         return renderShadows;
     }
 
-    public void setGameItems(GameItem[] gameItems) {
+    public void setItems(AppItem[] appItems) {
         // Create a map of meshes to speed up rendering
-        int numGameItems = gameItems != null ? gameItems.length : 0;
+        int numGameItems = appItems != null ? appItems.length : 0;
         for (int i = 0; i < numGameItems; i++) {
-            GameItem gameItem = gameItems[i];
-            Mesh[] meshes = gameItem.getMeshes();
+            AppItem appItem = appItems[i];
+            Mesh[] meshes = appItem.getMeshes();
             for (Mesh mesh : meshes) {
                 boolean instancedMesh = mesh instanceof InstancedMesh;
-                List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
+                List<AppItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
                 if (list == null) {
                     list = new ArrayList<>();
                     if (instancedMesh) {
@@ -63,7 +63,7 @@ public class Scene {
                         meshMap.put(mesh, list);
                     }
                 }
-                list.add(gameItem);
+                list.add(appItem);
             }
         }
     }

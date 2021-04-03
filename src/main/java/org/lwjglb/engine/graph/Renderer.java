@@ -1,23 +1,28 @@
 package org.lwjglb.engine.graph;
 
 import java.util.ArrayList;
+
 import org.lwjglb.engine.graph.lights.SpotLight;
 import org.lwjglb.engine.graph.lights.PointLight;
 import org.lwjglb.engine.graph.lights.DirectionalLight;
+
 import java.util.List;
 import java.util.Map;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
-import org.lwjglb.engine.items.GameItem;
+
+import org.lwjglb.engine.items.AppItem;
 import org.lwjglb.engine.Scene;
 import org.lwjglb.engine.SceneLight;
 import org.lwjglb.engine.items.SkyBox;
 import org.lwjglb.engine.Utils;
 import org.lwjglb.engine.Window;
-import org.lwjglb.engine.graph.anim.AnimGameItem;
+import org.lwjglb.engine.graph.anim.AnimAppItem;
 import org.lwjglb.engine.graph.anim.AnimatedFrame;
 import org.lwjglb.engine.graph.particles.IParticleEmitter;
 import org.lwjglb.engine.graph.shadow.ShadowCascade;
@@ -43,7 +48,7 @@ public class Renderer {
 
     private final FrustumCullingFilter frustumFilter;
 
-    private final List<GameItem> filteredItems;
+    private final List<AppItem> filteredItems;
 
     public Renderer() {
         transformation = new Transformation();
@@ -65,8 +70,8 @@ public class Renderer {
 
         if (window.getOptions().frustumCulling) {
             frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
-            frustumFilter.filter(scene.getGameMeshes());
-            frustumFilter.filter(scene.getGameInstancedMeshes());
+            frustumFilter.filter(scene.getAppMeshes());
+            frustumFilter.filter(scene.getAppInstancedMeshes());
         }
 
         // Render depth map before view ports has been set up
@@ -81,10 +86,10 @@ public class Renderer {
 
         renderScene(window, camera, scene);
         renderSkyBox(window, camera, scene);
-        renderParticles(window, camera, scene);
+        //renderParticles(window, camera, scene);
 
-        //renderAxes(camera);
-        //renderCrossHair(window);
+//        renderAxes(window, camera);
+        renderCrossHair(window);
     }
 
     private void setupParticlesShader() throws Exception {
@@ -266,7 +271,7 @@ public class Renderer {
         sceneShaderProgram.setUniform("isInstanced", 0);
 
         // Render each mesh with the associated game Items
-        Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
+        Map<Mesh, List<AppItem>> mapMeshes = scene.getAppMeshes();
         for (Mesh mesh : mapMeshes.keySet()) {
             sceneShaderProgram.setUniform("material", mesh.getMaterial());
 
@@ -278,16 +283,16 @@ public class Renderer {
 
             shadowRenderer.bindTextures(GL_TEXTURE2);
 
-            mesh.renderList(mapMeshes.get(mesh), (GameItem gameItem) -> {
-                sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
-                Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
-                sceneShaderProgram.setUniform("modelNonInstancedMatrix", modelMatrix);
-                if (gameItem instanceof AnimGameItem) {
-                    AnimGameItem animGameItem = (AnimGameItem) gameItem;
-                    AnimatedFrame frame = animGameItem.getCurrentAnimation().getCurrentFrame();
-                    sceneShaderProgram.setUniform("jointsMatrix", frame.getJointMatrices());
-                }
-            }
+            mesh.renderList(mapMeshes.get(mesh), (AppItem appItem) -> {
+                        sceneShaderProgram.setUniform("selectedNonInstanced", appItem.isSelected() ? 1.0f : 0.0f);
+                        Matrix4f modelMatrix = transformation.buildModelMatrix(appItem);
+                        sceneShaderProgram.setUniform("modelNonInstancedMatrix", modelMatrix);
+                        if (appItem instanceof AnimAppItem) {
+                            AnimAppItem animGameItem = (AnimAppItem) appItem;
+                            AnimatedFrame frame = animGameItem.getCurrentAnimation().getCurrentFrame();
+                            sceneShaderProgram.setUniform("jointsMatrix", frame.getJointMatrices());
+                        }
+                    }
             );
         }
     }
@@ -296,7 +301,7 @@ public class Renderer {
         sceneShaderProgram.setUniform("isInstanced", 1);
 
         // Render each mesh with the associated game Items
-        Map<InstancedMesh, List<GameItem>> mapMeshes = scene.getGameInstancedMeshes();
+        Map<InstancedMesh, List<AppItem>> mapMeshes = scene.getAppInstancedMeshes();
         for (InstancedMesh mesh : mapMeshes.keySet()) {
             Texture text = mesh.getMaterial().getTexture();
             if (text != null) {
@@ -307,9 +312,9 @@ public class Renderer {
             sceneShaderProgram.setUniform("material", mesh.getMaterial());
 
             filteredItems.clear();
-            for (GameItem gameItem : mapMeshes.get(mesh)) {
-                if (gameItem.isInsideFrustum()) {
-                    filteredItems.add(gameItem);
+            for (AppItem appItem : mapMeshes.get(mesh)) {
+                if (appItem.isInsideFrustum()) {
+                    filteredItems.add(appItem);
                 }
             }
             shadowRenderer.bindTextures(GL_TEXTURE2);
@@ -338,7 +343,7 @@ public class Renderer {
             sceneShaderProgram.setUniform("pointLights", currPointLight, i);
         }
 
-        // Process Spot Ligths
+        // Process Spot Lights
         SpotLight[] spotLightList = sceneLight.getSpotLightList();
         numLights = spotLightList != null ? spotLightList.length : 0;
         for (int i = 0; i < numLights; i++) {
@@ -371,7 +376,7 @@ public class Renderer {
             glPushMatrix();
             glLoadIdentity();
 
-            float inc = 0.05f;
+            float inc = 0.02f;
             glLineWidth(2.0f);
 
             glBegin(GL_LINES);
@@ -393,47 +398,8 @@ public class Renderer {
         }
     }
 
-    /**
-     * Renders the three axis in space (For debugging purposes only
-     *
-     * @param camera
-     */
-    private void renderAxes(Window window, Camera camera) {
-        Window.WindowOptions opts = window.getWindowOptions();
-        if (opts.compatibleProfile) {
-            glPushMatrix();
-            glLoadIdentity();
-            float rotX = camera.getRotation().x;
-            float rotY = camera.getRotation().y;
-            float rotZ = 0;
-            glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-            glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-            glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-            glLineWidth(2.0f);
-
-            glBegin(GL_LINES);
-            // X Axis
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3f(0.0f, 0.0f, 0.0f);
-            glVertex3f(1.0f, 0.0f, 0.0f);
-            // Y Axis
-            glColor3f(0.0f, 1.0f, 0.0f);
-            glVertex3f(0.0f, 0.0f, 0.0f);
-            glVertex3f(0.0f, 1.0f, 0.0f);
-            // Z Axis
-            glColor3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(0.0f, 0.0f, 0.0f);
-            glVertex3f(0.0f, 0.0f, 1.0f);
-            glEnd();
-
-            glPopMatrix();
-        }
-    }
-
     public void cleanup() {
-        if (shadowRenderer != null) {
-            shadowRenderer.cleanup();
-        }
+        shadowRenderer.cleanup();
         if (skyBoxShaderProgram != null) {
             skyBoxShaderProgram.cleanup();
         }
