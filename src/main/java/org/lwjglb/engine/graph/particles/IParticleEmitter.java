@@ -1,7 +1,7 @@
 package org.lwjglb.engine.graph.particles;
 
 import java.util.List;
-import org.lwjglb.engine.items.GameItem;
+import org.lwjglb.engine.items.AppItem;
 
 public interface IParticleEmitter {
 
@@ -9,5 +9,5 @@ public interface IParticleEmitter {
     
     Particle getBaseParticle();
     
-    List<GameItem> getParticles();
+    List<AppItem> getParticles();
 }

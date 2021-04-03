@@ -3,7 +3,7 @@ package org.lwjglb.engine.graph;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjglb.engine.items.GameItem;
+import org.lwjglb.engine.items.AppItem;
 
 public class Transformation {
 
@@ -51,31 +51,31 @@ public class Transformation {
         return ortho2DMatrix.setOrtho2D(left, right, bottom, top);
     }
     
-    public Matrix4f buildModelMatrix(GameItem gameItem) {
-        Quaternionf rotation = gameItem.getRotation();
+    public Matrix4f buildModelMatrix(AppItem appItem) {
+        Quaternionf rotation = appItem.getRotation();
         return modelMatrix.translationRotateScale(
-                gameItem.getPosition().x, gameItem.getPosition().y, gameItem.getPosition().z,
+                appItem.getPosition().x, appItem.getPosition().y, appItem.getPosition().z,
                 rotation.x, rotation.y, rotation.z, rotation.w,
-                gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
+                appItem.getScale(), appItem.getScale(), appItem.getScale());
     }
 
-    public Matrix4f buildModelViewMatrix(GameItem gameItem, Matrix4f viewMatrix) {
-        return buildModelViewMatrix(buildModelMatrix(gameItem), viewMatrix);
+    public Matrix4f buildModelViewMatrix(AppItem appItem, Matrix4f viewMatrix) {
+        return buildModelViewMatrix(buildModelMatrix(appItem), viewMatrix);
     }
     
     public Matrix4f buildModelViewMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
         return viewMatrix.mulAffine(modelMatrix, modelViewMatrix);
     }
 
-    public Matrix4f buildModelLightViewMatrix(GameItem gameItem, Matrix4f lightViewMatrix) {
-        return buildModelViewMatrix(buildModelMatrix(gameItem), lightViewMatrix);
+    public Matrix4f buildModelLightViewMatrix(AppItem appItem, Matrix4f lightViewMatrix) {
+        return buildModelViewMatrix(buildModelMatrix(appItem), lightViewMatrix);
     }
 
     public Matrix4f buildModelLightViewMatrix(Matrix4f modelMatrix, Matrix4f lightViewMatrix) {
         return lightViewMatrix.mulAffine(modelMatrix, modelLightViewMatrix);
     }
 
-    public Matrix4f buildOrthoProjModelMatrix(GameItem gameItem, Matrix4f orthoMatrix) {
-        return orthoMatrix.mulOrthoAffine(buildModelMatrix(gameItem), orthoModelMatrix);
+    public Matrix4f buildOrthoProjModelMatrix(AppItem appItem, Matrix4f orthoMatrix) {
+        return orthoMatrix.mulOrthoAffine(buildModelMatrix(appItem), orthoModelMatrix);
     }
 }

@@ -3,9 +3,9 @@ package org.lwjglb.engine.graph.particles;
 import org.joml.Vector3f;
 import org.lwjglb.engine.graph.Mesh;
 import org.lwjglb.engine.graph.Texture;
-import org.lwjglb.engine.items.GameItem;
+import org.lwjglb.engine.items.AppItem;
 
-public class Particle extends GameItem {
+public class Particle extends AppItem {
 
     private long updateTextureMillis;
     

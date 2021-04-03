@@ -1,21 +1,18 @@
 package org.lwjglb.engine.items;
 
 import org.joml.Vector4f;
-import static org.lwjgl.assimp.Assimp.aiProcess_FindDegenerates;
-import static org.lwjgl.assimp.Assimp.aiProcess_JoinIdenticalVertices;
-import static org.lwjgl.assimp.Assimp.aiProcess_ValidateDataStructure;
 import org.lwjglb.engine.graph.Material;
 import org.lwjglb.engine.graph.Mesh;
 import org.lwjglb.engine.graph.Texture;
 import org.lwjglb.engine.loaders.assimp.StaticMeshesLoader;
 
-public class SkyBox extends GameItem {
+public class SkyBox extends AppItem {
 
     public SkyBox(String objModel, String textureFile) throws Exception {
         super();
         Mesh skyBoxMesh = StaticMeshesLoader.load(objModel, "")[0];
-        Texture skyBoxtexture = new Texture(textureFile);
-        skyBoxMesh.setMaterial(new Material(skyBoxtexture, 0.0f));
+        Texture skyBoxTexture = new Texture(textureFile);
+        skyBoxMesh.setMaterial(new Material(skyBoxTexture, 0.0f));
         setMesh(skyBoxMesh);
         setPosition(0, 0, 0);
     }
