@@ -132,10 +132,10 @@ public class App implements IAppLogic {
             sceneChanged = true;
             cameraInc.x = 1;
         }
-        if (window.isKeyPressed(GLFW_KEY_Z)) {
+        if (window.isKeyPressed(GLFW_KEY_F)) {
             sceneChanged = true;
             cameraInc.y = -1;
-        } else if (window.isKeyPressed(GLFW_KEY_X)) {
+        } else if (window.isKeyPressed(GLFW_KEY_R)) {
             sceneChanged = true;
             cameraInc.y = 1;
         }

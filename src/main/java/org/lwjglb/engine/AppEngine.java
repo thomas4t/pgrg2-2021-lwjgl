@@ -2,8 +2,6 @@ package org.lwjglb.engine;
 
 import org.lwjglb.app.Hud;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class AppEngine implements Runnable {
 
     public static final int TARGET_FPS = 300;
@@ -26,11 +24,11 @@ public class AppEngine implements Runnable {
     
     private int fps;
     
-    public AppEngine(String windowTitle, Hud hud, Window.WindowOptions opts, IAppLogic gameLogic) throws Exception {
+    public AppEngine(String windowTitle, Hud hud, Window.WindowOptions opts, IAppLogic gameLogic) {
         this(windowTitle, 0, 0, hud, opts, gameLogic);
     }
 
-    public AppEngine(String windowTitle, int width, int height, Hud hud, Window.WindowOptions opts, IAppLogic gameLogic) throws Exception {
+    public AppEngine(String windowTitle, int width, int height, Hud hud, Window.WindowOptions opts, IAppLogic gameLogic) {
         this.windowTitle = windowTitle;
         window = new Window(windowTitle, width, height, opts);
         mouseInput = new MouseInput();

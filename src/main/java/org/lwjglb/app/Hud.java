@@ -83,8 +83,9 @@ public class Hud {
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
 
         // Controls
-        nvgText(vg, window.getWidth() - borderOffsetPx, 20, "WSAD | X(up) | Y(down) | Right Mouse Btn - Scene movement");
-        nvgText(vg, window.getWidth() - borderOffsetPx, 40, "Space (Hold) - Animate the guy");
+        nvgText(vg, window.getWidth() - borderOffsetPx, 20, "WSAD | R(up) | F(down) | Right Mouse Btn - Scene movement");
+        nvgText(vg, window.getWidth() - borderOffsetPx, 40, "Left, right arrow key - move light");
+        nvgText(vg, window.getWidth() - borderOffsetPx, 60, "Space (Hold) - Animate the guy");
 
         // Me
         nvgText(vg, window.getWidth() - borderOffsetPx, window.getHeight() - 45, "PGRF2@UHK 2021 - Tomáš Trávníček");

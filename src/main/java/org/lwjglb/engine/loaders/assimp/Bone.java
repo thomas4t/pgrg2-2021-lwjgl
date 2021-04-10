@@ -8,7 +8,7 @@ public class Bone {
 
     private final String boneName;
 
-    private Matrix4f offsetMatrix;
+    private final Matrix4f offsetMatrix;
 
     public Bone(int boneId, String boneName, Matrix4f offsetMatrix) {
         this.boneId = boneId;

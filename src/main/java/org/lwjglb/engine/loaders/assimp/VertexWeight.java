@@ -2,7 +2,7 @@ package org.lwjglb.engine.loaders.assimp;
 
 public class VertexWeight {
 
-    private int boneId;
+    private final int boneId;
 
     private int vertexId;
 

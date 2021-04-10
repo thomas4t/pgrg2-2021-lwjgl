@@ -8,7 +8,7 @@ import org.lwjglb.engine.items.AppItem;
 
 public class AnimAppItem extends AppItem {
 
-    private Map<String, Animation> animations;
+    private final Map<String, Animation> animations;
 
     private Animation currentAnimation;
 

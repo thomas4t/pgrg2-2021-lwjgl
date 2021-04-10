@@ -24,7 +24,6 @@ import org.lwjglb.engine.Utils;
 import org.lwjglb.engine.Window;
 import org.lwjglb.engine.graph.anim.AnimAppItem;
 import org.lwjglb.engine.graph.anim.AnimatedFrame;
-import org.lwjglb.engine.graph.particles.IParticleEmitter;
 import org.lwjglb.engine.graph.shadow.ShadowCascade;
 import org.lwjglb.engine.graph.shadow.ShadowRenderer;
 
@@ -165,38 +164,6 @@ public class Renderer {
 
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
-
-    private void renderParticles(Window window, Camera camera, Scene scene) {
-        particlesShaderProgram.bind();
-
-        Matrix4f viewMatrix = camera.getViewMatrix();
-        particlesShaderProgram.setUniform("viewMatrix", viewMatrix);
-        particlesShaderProgram.setUniform("texture_sampler", 0);
-        Matrix4f projectionMatrix = window.getProjectionMatrix();
-        particlesShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-
-        IParticleEmitter[] emitters = scene.getParticleEmitters();
-        int numEmitters = emitters != null ? emitters.length : 0;
-
-        glDepthMask(false);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-        for (int i = 0; i < numEmitters; i++) {
-            IParticleEmitter emitter = emitters[i];
-            InstancedMesh mesh = (InstancedMesh) emitter.getBaseParticle().getMesh();
-
-            Texture text = mesh.getMaterial().getTexture();
-            particlesShaderProgram.setUniform("numCols", text.getNumCols());
-            particlesShaderProgram.setUniform("numRows", text.getNumRows());
-
-            mesh.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix);
-        }
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDepthMask(true);
-
-        particlesShaderProgram.unbind();
     }
 
     private void renderSkyBox(Window window, Camera camera, Scene scene) {

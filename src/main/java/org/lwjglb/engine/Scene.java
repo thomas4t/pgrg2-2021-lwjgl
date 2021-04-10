@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.lwjglb.engine.graph.InstancedMesh;
 import org.lwjglb.engine.graph.Mesh;
-import org.lwjglb.engine.graph.particles.IParticleEmitter;
 import org.lwjglb.engine.graph.weather.Fog;
 
 public class Scene {
@@ -24,8 +23,6 @@ public class Scene {
     private Fog fog;
 
     private boolean renderShadows;
-    
-    private IParticleEmitter[] particleEmitters;
 
     public Scene() {
         meshMap = new HashMap();
@@ -75,11 +72,6 @@ public class Scene {
         for (Mesh mesh : instancedMeshMap.keySet()) {
             mesh.cleanUp();
         }
-        if (particleEmitters != null) {
-            for (IParticleEmitter particleEmitter : particleEmitters) {
-                particleEmitter.cleanup();
-            }
-        }
     }
 
     public SkyBox getSkyBox() {
@@ -115,13 +107,4 @@ public class Scene {
     public void setFog(Fog fog) {
         this.fog = fog;
     }
-
-    public IParticleEmitter[] getParticleEmitters() {
-        return particleEmitters;
-    }
-
-    public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
-        this.particleEmitters = particleEmitters;
-    }
-
 }

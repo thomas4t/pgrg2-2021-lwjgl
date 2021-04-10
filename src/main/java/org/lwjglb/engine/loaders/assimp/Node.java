@@ -13,7 +13,7 @@ public class Node {
 
     private final Node parent;
 
-    private Matrix4f nodeTransformation;
+    private final Matrix4f nodeTransformation;
 
     public Node(String name, Node parent, Matrix4f nodeTransformation) {
         this.name = name;

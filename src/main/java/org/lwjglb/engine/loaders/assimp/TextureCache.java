@@ -8,7 +8,7 @@ public class TextureCache {
 
     private static TextureCache INSTANCE;
 
-    private Map<String, Texture> texturesMap;
+    private final Map<String, Texture> texturesMap;
     
     private TextureCache() {
         texturesMap = new HashMap<>();
