@@ -62,7 +62,7 @@ public class App implements IAppLogic {
 
         scene = new Scene();
 
-        Mesh[] terrainMesh = StaticMeshesLoader.load("models/terrain/terrain.obj", "models/terrain");
+        Mesh[] terrainMesh = StaticMeshesLoader.load("models/terrain/terrain.obj", "");
         AppItem terrain = new AppItem(terrainMesh);
         terrain.setScale(100.0f);
 
@@ -74,7 +74,7 @@ public class App implements IAppLogic {
         Mesh[] lamboMesh = StaticMeshesLoader.load("models/lambo/lambo-centenario.dae", "textures/lambo");
         AppItem staticItem = new AppItem(lamboMesh);
 
-        scene.setItems(new AppItem[]{animItem, staticItem, terrain});
+        scene.setItems(new AppItem[]{terrain, animItem, staticItem});
 
         // Shadows
         scene.setRenderShadows(true);
