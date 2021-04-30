@@ -41,8 +41,6 @@ public class Renderer {
 
     private ShaderProgram skyBoxShaderProgram;
 
-    private ShaderProgram particlesShaderProgram;
-
     private final float specularPower;
 
     private final FrustumCullingFilter frustumFilter;
@@ -61,7 +59,7 @@ public class Renderer {
         shadowRenderer.init(window);
         setupSkyBoxShader();
         setupSceneShader();
-        setupParticlesShader();
+        //setupParticlesShader();
     }
 
     public void render(Window window, Camera camera, Scene scene, boolean sceneChanged) {
@@ -89,20 +87,6 @@ public class Renderer {
 
 //        renderAxes(window, camera);
         renderCrossHair(window);
-    }
-
-    private void setupParticlesShader() throws Exception {
-        particlesShaderProgram = new ShaderProgram();
-        particlesShaderProgram.createVertexShader(Utils.loadResource("/shaders/particles_vertex.vs"));
-        particlesShaderProgram.createFragmentShader(Utils.loadResource("/shaders/particles_fragment.fs"));
-        particlesShaderProgram.link();
-
-        particlesShaderProgram.createUniform("viewMatrix");
-        particlesShaderProgram.createUniform("projectionMatrix");
-        particlesShaderProgram.createUniform("texture_sampler");
-
-        particlesShaderProgram.createUniform("numCols");
-        particlesShaderProgram.createUniform("numRows");
     }
 
     private void setupSkyBoxShader() throws Exception {
@@ -372,9 +356,6 @@ public class Renderer {
         }
         if (sceneShaderProgram != null) {
             sceneShaderProgram.cleanup();
-        }
-        if (particlesShaderProgram != null) {
-            particlesShaderProgram.cleanup();
         }
     }
 }

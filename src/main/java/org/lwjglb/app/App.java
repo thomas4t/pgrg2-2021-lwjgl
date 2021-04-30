@@ -92,7 +92,7 @@ public class App implements IAppLogic {
         // Setup Lights
         setupLights();
 
-        camera.getPosition().x = -1.5f;
+        camera.getPosition().x = -2.5f;
         camera.getPosition().y = 3.0f;
         camera.getPosition().z = 4.5f;
         camera.getRotation().x = 15.0f;
